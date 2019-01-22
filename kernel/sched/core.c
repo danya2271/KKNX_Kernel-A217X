@@ -2444,7 +2444,7 @@ void wake_up_new_task(struct task_struct *p)
 #endif
 	rq = __task_rq_lock(p, &rf);
 	update_rq_clock(rq);
-	post_init_entity_util_avg(&p->se);
+	post_init_entity_util_avg(p);
 
 	update_cpu_active_ratio(rq, p, EMS_PART_WAKEUP_NEW);
 
