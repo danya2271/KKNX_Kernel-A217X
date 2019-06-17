@@ -316,8 +316,18 @@ unsigned long schedutil_freq_util(int cpu, unsigned long util,
 static unsigned long sugov_get_util(struct sugov_cpu *sg_cpu)
 {
 	struct rq *rq = cpu_rq(sg_cpu->cpu);
+<<<<<<< HEAD
 	unsigned long util = boosted_cpu_util(sg_cpu->cpu, cpu_util_rt(rq));
 	unsigned long max = arch_scale_cpu_capacity(NULL, sg_cpu->cpu);
+=======
+#ifdef CONFIG_SCHED_TUNE
+	unsigned long util = stune_util(sg_cpu->cpu, cpu_util_rt(rq));
+#else
+	unsigned long util = cpu_util_freq(sg_cpu->cpu);
+#endif
+	unsigned long util_cfs = util - cpu_util_rt(rq);
+	unsigned long max = arch_scale_cpu_capacity(sg_cpu->cpu);
+>>>>>>> 75416ccc9092 (sched/topology: Remove unused 'sd' parameter from arch_scale_cpu_capacity())
 
 	sg_cpu->max = max;
 	sg_cpu->bw_dl = cpu_bw_dl(rq);
