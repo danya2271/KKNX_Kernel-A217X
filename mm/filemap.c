@@ -219,7 +219,6 @@ static void unaccount_page_cache_page(struct address_space *mapping,
 
 		pr_alert("BUG: Bad page cache in process %s  pfn:%05lx\n",
 			 current->comm, page_to_pfn(page));
-		dump_page(page, "still mapped when deleted");
 		dump_stack();
 		add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
 
