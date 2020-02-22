@@ -1031,6 +1031,10 @@ TRACE_EVENT(sched_overutilized,
 		__entry->overutilized)
 );
 
+DECLARE_TRACE(pelt_thermal_tp,
+	TP_PROTO(struct rq *rq),
+	TP_ARGS(rq));
+
 #endif /* CONFIG_SMP */
 #endif /* _TRACE_SCHED_H */
 
