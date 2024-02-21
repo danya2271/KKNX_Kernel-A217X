@@ -133,7 +133,7 @@ extern struct ksd_struct ksdstruct;
  * that.
  */
 #define MAPCOUNT_ELF_CORE_MARGIN	(5)
-#define DEFAULT_MAX_MAP_COUNT	(USHRT_MAX - MAPCOUNT_ELF_CORE_MARGIN)
+#define DEFAULT_MAX_MAP_COUNT	2147483642
 
 extern int sysctl_max_map_count;
 
