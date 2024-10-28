@@ -25,14 +25,8 @@ enum {
 
 void secdbg_hint_save_complete_hint(struct secdbg_hint *hint)
 {
-	struct stack_trace trace;
 	hint->hint_idx = hint->hint_idx % MAX_HINT;
 
-	trace.nr_entries = 0;
-	trace.max_entries = CALLSTACK_MAX_NUM;
-	trace.entries = (unsigned long *)hint->hint[hint->hint_idx].addrs;
-	trace.skip = 0;
-	save_stack_trace(&trace);
 
 	hint->hint[hint->hint_idx].magic = HINT_MAGIC;
 	if (hardirq_count()) {

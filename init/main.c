@@ -806,7 +806,7 @@ static int __init initcall_blacklist(char *str)
 	return 0;
 }
 
-static bool __init_or_module initcall_blacklisted(initcall_t fn)
+static bool initcall_blacklisted(initcall_t fn)
 {
 	struct blacklist_entry *entry;
 	char fn_name[KSYM_SYMBOL_LEN];
@@ -849,7 +849,7 @@ __setup("initcall_blacklist=", initcall_blacklist);
 
 #ifdef CONFIG_SEC_BOOTSTAT
 
-static bool __init_or_module initcall_sec_debug = true;
+static bool initcall_sec_debug = true;
 
 static int __init_or_module do_one_initcall_sec_debug(initcall_t fn)
 {
