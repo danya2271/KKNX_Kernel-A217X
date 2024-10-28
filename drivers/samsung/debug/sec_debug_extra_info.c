@@ -1006,8 +1006,7 @@ void secdbg_exin_set_smpl(unsigned long count)
 
 void secdbg_exin_set_esr(unsigned int esr)
 {
-	set_item_val("ESR", "%s (0x%08x)",
-	esr_get_class_string(esr), esr);
+	set_item_val("ESR", "%s (0x%08x)", 0);
 }
 
 void secdbg_exin_set_merr(char *merr)

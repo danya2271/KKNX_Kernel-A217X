@@ -37,31 +37,31 @@
 
 static struct _clock_info clk_info;
 
-int gpex_clock_get_boot_clock()
+int gpex_clock_get_boot_clock(void)
 {
 	return clk_info.boot_clock;
 }
-int gpex_clock_get_max_clock()
+int gpex_clock_get_max_clock(void)
 {
 	return clk_info.gpu_max_clock;
 }
-int gpex_clock_get_max_clock_limit()
+int gpex_clock_get_max_clock_limit(void)
 {
 	return clk_info.gpu_max_clock_limit;
 }
-int gpex_clock_get_min_clock()
+int gpex_clock_get_min_clock(void)
 {
 	return clk_info.gpu_min_clock;
 }
-int gpex_clock_get_cur_clock()
+int gpex_clock_get_cur_clock(void)
 {
 	return clk_info.cur_clock;
 }
-int gpex_clock_get_max_lock()
+int gpex_clock_get_max_lock(void)
 {
 	return clk_info.max_lock;
 }
-int gpex_clock_get_min_lock()
+int gpex_clock_get_min_lock(void)
 {
 	return clk_info.min_lock;
 }
@@ -77,7 +77,7 @@ u64 gpex_clock_get_time_busy(int level)
 {
 	return clk_info.table[level].time_busy;
 }
-bool gpex_clock_get_unlock_freqs_status()
+bool gpex_clock_get_unlock_freqs_status(void)
 {
 	return clk_info.unlock_freqs;
 }
@@ -86,7 +86,7 @@ bool gpex_clock_get_unlock_freqs_status()
  * static helper functions
  ******************************************/
 
-int gpex_clock_update_config_data_from_dt()
+int gpex_clock_update_config_data_from_dt(void)
 {
 	dt_clock_item *dt_clock_table = gpexbe_devicetree_get_clock_table();
 	int ret = 0;
@@ -334,7 +334,7 @@ int gpex_clock_init(struct device **dev)
 	return 0;
 }
 
-void gpex_clock_term()
+void gpex_clock_term(void)
 {
 	/* TODO: reset other clk_info variables too */
 	clk_info.kbdev = NULL;
@@ -355,7 +355,7 @@ int gpex_clock_get_table_idx(int clock)
 	return -1;
 }
 
-int gpex_clock_get_clock_slow()
+int gpex_clock_get_clock_slow(void)
 {
 	return gpexbe_clock_get_rate();
 }
@@ -407,7 +407,7 @@ int gpex_clock_set(int clk)
 	return ret;
 }
 
-int gpex_clock_prepare_runtime_off()
+int gpex_clock_prepare_runtime_off(void)
 {
 	gpex_clock_update_time_in_state(clk_info.cur_clock);
 
@@ -561,12 +561,12 @@ int gpex_clock_lock_clock(gpex_clock_lock_cmd_t lock_command, gpex_clock_lock_ty
 	return 0;
 }
 
-void gpex_clock_mutex_lock()
+void gpex_clock_mutex_lock(void)
 {
 	mutex_lock(&clk_info.clock_lock);
 }
 
-void gpex_clock_mutex_unlock()
+void gpex_clock_mutex_unlock(void)
 {
 	mutex_unlock(&clk_info.clock_lock);
 }

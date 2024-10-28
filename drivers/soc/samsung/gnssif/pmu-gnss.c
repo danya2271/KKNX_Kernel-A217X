@@ -141,7 +141,7 @@ static void gnss_get_apreg(struct gnss_apreg *apreg)
 
 #if defined(CONFIG_SOC_EXYNOS9630)
 static void __iomem *intr_bid_pend; /* check APM pending before release reset */
-static bool check_apm_int_pending()
+static bool check_apm_int_pending(void)
 {
 	bool ret = false;
 	int reg_val = 0;
@@ -168,7 +168,7 @@ static bool check_apm_int_pending()
 	return ret;
 }
 #else
-static bool check_apm_int_pending()
+static bool check_apm_int_pending(void)
 {
 	return true;
 }

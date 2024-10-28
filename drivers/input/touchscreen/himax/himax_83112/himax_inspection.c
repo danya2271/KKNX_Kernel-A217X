@@ -2107,7 +2107,7 @@ int hx_get_3x3_noise(int *RAW, int mid_pos_x, int mid_pos_y)
 	ret = sum;
 	return ret;
 }
-
+int32_t *diag_mutual = NULL;
 extern int32_t *diag_mutual;
 int hx_sensity_test(int *result)
 {
@@ -4563,14 +4563,12 @@ static ssize_t sensitivity_mode_store(struct device *dev,
 
 	if (mode == 0) {
 //		hx_set_sram_raw(0);	// stop test
-		hx_set_stack_raw(0);	// stop test
 
 		input_info(true, g_ts->dev,
 				"%s %sTurn off Sensitivity Measurement\n",
 				HIMAX_LOG_TAG, __func__);
 	} else {
 //		hx_set_sram_raw(1);	// start test
-		hx_set_stack_raw(1);	// start test
 
 		input_info(true, g_ts->dev,
 				"%s %sTurn on Sensitivity Measurement\n",

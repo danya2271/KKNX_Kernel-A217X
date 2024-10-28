@@ -89,7 +89,7 @@ endif
 # If the user is running make -s (silent mode), suppress echoing of
 # commands
 
-ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
+ifneq ($(findstring s,$(filter-out --%,$(short-opts))),)
   quiet=silent_
   tools_silent=s
 endif
@@ -208,8 +208,6 @@ obj		:= $(objtree)
 VPATH		:= $(srctree)$(if $(KBUILD_EXTMOD),:$(KBUILD_EXTMOD))
 
 export srctree objtree VPATH
-
-CCACHE := ccache
 
 # To make sure we do not include .config for any of the *config targets
 # catch them early, and hand them over to scripts/kconfig/Makefile
@@ -361,41 +359,41 @@ HOST_LFS_LDFLAGS := $(shell getconf LFS_LDFLAGS 2>/dev/null)
 HOST_LFS_LIBS := $(shell getconf LFS_LIBS 2>/dev/null)
 
 ifneq ($(LLVM),)
-HOSTCC	= $(CCACHE) clang
-HOSTCXX	= $(CCACHE) clang++
+HOSTCC	=  clang
+HOSTCXX	=  clang++
 else
-HOSTCC	= $(CCACHE) gcc
-HOSTCXX	= $(CCACHE) g++
+HOSTCC	=  gcc
+HOSTCXX	=  g++
 endif
-KBUILD_HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 \
+KBUILD_HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 \
 		-fomit-frame-pointer -std=gnu89 $(HOST_LFS_CFLAGS) \
 		$(HOSTCFLAGS)
-KBUILD_HOSTCXXFLAGS := -O2 $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS)
+KBUILD_HOSTCXXFLAGS := -O3 $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS)
 KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
 KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
 
 # Make variables (CC, etc...)
-CPP		= $(CCACHE) $(CC) -E
+CPP		=  $(CC) -E
 ifneq ($(LLVM),)
-CC		= $(CCACHE) clang
-LD		= $(CCACHE) ld.lld
-AR		= $(CCACHE) llvm-ar
-NM		= $(CCACHE) llvm-nm
-OBJCOPY		= $(CCACHE) llvm-objcopy
-OBJDUMP		= $(CCACHE) llvm-objdump
-READELF		= $(CCACHE) llvm-readelf
-OBJSIZE		= $(CCACHE) llvm-size
-STRIP		= $(CCACHE) llvm-strip
+CC		=  clang
+LD		=  ld.lld
+AR		=  llvm-ar
+NM		=  llvm-nm
+OBJCOPY		=  llvm-objcopy
+OBJDUMP		=  llvm-objdump
+READELF		=  llvm-readelf
+OBJSIZE		=  llvm-size
+STRIP		=  llvm-strip
 else
-CC              = $(CCACHE) clang
-LD		= $(CCACHE) ld
-AR		= $(CCACHE) ar
-NM		= $(CCACHE) nm
-OBJCOPY		= $(CCACHE) objcopy
-OBJDUMP		= $(CCACHE) objdump
-READELF		= $(CCACHE) readelf
-OBJSIZE		= $(CCACHE) size
-STRIP		= $(CCACHE) strip
+CC              =  clang
+LD		=  ld
+AR		=  ar
+NM		=  nm
+OBJCOPY		=  objcopy
+OBJDUMP		=  objdump
+READELF		=  readelf
+OBJSIZE		=  size
+STRIP		=  strip
 endif
 LEX		= flex
 YACC		= bison
@@ -442,10 +440,10 @@ LINUXINCLUDE    := \
 		$(USERINCLUDE)
 
 KBUILD_AFLAGS   := -D__ASSEMBLY__
-KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
+KBUILD_CFLAGS   := -Wall -Wundef -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common -fshort-wchar \
 		   -Werror-implicit-function-declaration \
-		   -Wno-format-security \
+		   -Wno-format-security -Wno-strict-prototypes \
 		   -Werror \
 		   -std=gnu89
 KBUILD_CPPFLAGS := -D__KERNEL__
@@ -963,9 +961,6 @@ KBUILD_CFLAGS  += $(call cc-option,-fno-stack-check,)
 
 # disallow errors like 'EXPORT_GPL(foo);' with missing header
 KBUILD_CFLAGS   += $(call cc-option,-Werror=implicit-int)
-
-# require functions to have arguments in prototypes, not empty 'int foo()'
-KBUILD_CFLAGS   += $(call cc-option,-Werror=strict-prototypes)
 
 # Prohibit date/time macros, which would make the build non-deterministic
 KBUILD_CFLAGS   += $(call cc-option,-Werror=date-time)

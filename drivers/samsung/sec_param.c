@@ -235,7 +235,6 @@ int sec_set_param(unsigned long offset, char val)
 	mutex_lock(&sec_param_mutex);
 
 	switch (offset) {
-	case CM_OFFSET ... CM_OFFSET_LIMIT:
 	case FMM_LOCK_OFFSET:
 		break;
 	default:
