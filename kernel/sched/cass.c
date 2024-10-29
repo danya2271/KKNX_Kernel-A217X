@@ -50,6 +50,9 @@ void cass_cpu_util(struct cass_cpu_cand *c, int this_cpu, bool sync)
 		}
 	}
 
+	/* Get the capacity of this CPU adjusted for thermal pressure */
+	c->cap = arch_scale_cpu_capacity(c->cpu) - thermal_load_avg(rq);
+
 	/*
 	 * Account for lost capacity due to time spent in RT/DL tasks and IRQs.
 	 * Capacity is considered lost to RT tasks even when @p is an RT task in
@@ -145,7 +148,7 @@ static int cass_best_cpu(struct task_struct *p, int prev_cpu, bool sync, bool rt
 		 * sync wakes, always treat the current CPU as idle.
 		 */
 		if ((sync && cpu == this_cpu) ||
-		    available_idle_cpu(cpu)) {
+		    available_idle_cpu(cpu) || sched_idle_cpu(cpu)) {
 			/* Discard any previous non-idle candidate */
 			if (!has_idle)
 				best = curr;
