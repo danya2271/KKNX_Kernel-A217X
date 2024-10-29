@@ -732,24 +732,37 @@ KBUILD_CFLAGS 	+= $(call cc-disable-warning,maybe-uninitialized,) \
 		   $(call cc-disable-warning,unused-variable,) \
 		   $(call cc-disable-warning,unused-function)
 
+KBUILD_CFLAGS	+= -mllvm -inline-threshold=4000
+KBUILD_CFLAGS	+= -mllvm -inlinehint-threshold=3111
+
+KBUILD_CFLAGS  += -mllvm -inline-savings-multiplier=18
+KBUILD_CFLAGS  += -mllvm -inline-cold-callsite-threshold=65
+KBUILD_CFLAGS  += -mllvm -inline-size-allowance=30
+KBUILD_CFLAGS  += -mllvm -inlinecold-threshold=160
+KBUILD_CFLAGS  += -mllvm -locally-hot-callsite-threshold=1050
+KBUILD_CFLAGS  += -mllvm -hot-callsite-rel-freq=130
+KBUILD_CFLAGS  += -mllvm -cold-callsite-rel-freq=6
+KBUILD_CFLAGS  += -mllvm -inline-enable-cost-benefit-analysis
+
+
 ifdef CONFIG_POLLY_CLANG
-# Enable Clang Polly optimizations
-KBUILD_CFLAGS	+= -mllvm -polly \
+POLLY_FLAGS	+= -mllvm -polly \
+		   -mllvm -polly-ast-use-context \
+		   -mllvm -polly-invariant-load-hoisting \
 		   -mllvm -polly-run-inliner \
-		   -mllvm -polly-reschedule=1 \
-		   -mllvm -polly-loopfusion-greedy=1 \
-		   -mllvm -polly-postopts=1 \
-		   -mllvm -polly-num-threads=0 \
+		   -mllvm -polly-vectorizer=stripmine \
 		   -mllvm -polly-omp-backend=LLVM \
 		   -mllvm -polly-scheduling=dynamic \
-		   -mllvm -polly-scheduling-chunksize=1 \
-		   -mllvm -polly-isl-arg=--no-schedule-serialize-sccs \
-		   -mllvm -polly-ast-use-context \
-		   -mllvm -polly-detect-keep-going \
-		   -mllvm -polly-position=before-vectorizer \
-		   -mllvm -polly-vectorizer=stripmine \
-		   -mllvm -polly-detect-profitability-min-per-loop-insts=40 \
-		   -mllvm -polly-invariant-load-hoisting
+		   -mllvm -polly-scheduling-chunksize=1
+# Polly may optimise loops with dead paths beyound what the linker
+# can understand. This may negate the effect of the linker's DCE
+# so we tell Polly to perfom proven DCE on the loops it optimises
+# in order to preserve the overall effect of the linker's DCE.
+ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
+POLLY_FLAGS	+= -mllvm -polly-run-dce
+endif
+OPT_FLAGS	+= $(POLLY_FLAGS)
+KBUILD_LDFLAGS	+= $(POLLY_FLAGS)
 endif
 
 # Tell gcc to never replace conditional load with a non-conditional one
