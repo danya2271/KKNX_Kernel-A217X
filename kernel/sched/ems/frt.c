@@ -530,7 +530,7 @@ accumulate_sum(u64 delta, int cpu, struct sched_avg *sa,
         u64 periods;
 
         scale_freq = arch_scale_freq_capacity(cpu);
-        scale_cpu = arch_scale_cpu_capacity(NULL, cpu);
+        scale_cpu = arch_scale_cpu_capacity(cpu);
 
         delta += sa->period_contrib;
         periods = delta / 1024; /* A period is 1024us (~1ms) */
@@ -1044,7 +1044,7 @@ static int find_victim_rt_rq(struct task_struct *task)
 	struct frt_dom *dom, *prefer_dom;
 	bool reverse = false;
 
-	min_cpu_cap = arch_scale_cpu_capacity(NULL, task_cpu(task));
+	min_cpu_cap = arch_scale_cpu_capacity(task_cpu(task));
 	min_rtweight = task->rt.avg.util_avg * weight_from_rtprio(task->prio);
 
 	cpu = find_prefer_cpu(task, &reverse);
@@ -1071,7 +1071,7 @@ static int find_victim_rt_rq(struct task_struct *task)
 				break;
 			}
 
-			victim_cpu_cap = arch_scale_cpu_capacity(NULL, cpu);
+			victim_cpu_cap = arch_scale_cpu_capacity(cpu);
 			victim_rtweight = victim->rt.avg.util_avg * weight_from_rtprio(victim->prio);
 
 			/*

@@ -615,7 +615,7 @@ static void slack_update_min(struct cpufreq_policy *policy)
 	unsigned long max_cap, min_cap;
 	struct exynos_slack_timer *slack_timer;
 
-	max_cap = arch_scale_cpu_capacity(NULL, policy->cpu);
+	max_cap = arch_scale_cpu_capacity(policy->cpu);
 
 	/* min_cap is minimum value making higher frequency than policy->min */
 	min_cap = (max_cap * policy->min) / policy->max;

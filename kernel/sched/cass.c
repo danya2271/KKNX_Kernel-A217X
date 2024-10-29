@@ -148,7 +148,7 @@ static int cass_best_cpu(struct task_struct *p, int prev_cpu, bool sync, bool rt
 		 * sync wakes, always treat the current CPU as idle.
 		 */
 		if ((sync && cpu == this_cpu) ||
-		    available_idle_cpu(cpu) || sched_idle_cpu(cpu)) {
+		    available_idle_cpu(cpu)) {
 			/* Discard any previous non-idle candidate */
 			if (!has_idle)
 				best = curr;

@@ -87,6 +87,8 @@ static void __iomem *reg_base;
 static unsigned long clk_rate;
 static unsigned int mct_int_type;
 static int mct_irqs[MCT_NR_IRQS];
+ATOMIC_NOTIFIER_HEAD(hardlockup_notifier_list);
+EXPORT_SYMBOL(hardlockup_notifier_list);
 extern struct atomic_notifier_head hardlockup_notifier_list;
 
 struct mct_clock_event_device {

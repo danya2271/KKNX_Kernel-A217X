@@ -760,7 +760,7 @@ esgov_update(struct update_util_data *hook, u64 time, unsigned int flags)
 {
 	struct esgov_cpu *esg_cpu = container_of(hook, struct esgov_cpu, update_util);
 	struct esgov_policy *esg_policy = esg_cpu->esg_policy;
-	unsigned long max = arch_scale_cpu_capacity(NULL, esg_cpu->cpu);
+	unsigned long max = arch_scale_cpu_capacity(esg_cpu->cpu);
 	unsigned int target_util, target_freq;
 
 	/* check iowait boot */
@@ -870,7 +870,7 @@ struct cpufreq_governor energy_step_gov = {
 int get_gov_next_cap(int dst_cpu, struct task_struct *p)
 {
 	struct esgov_policy *esg_policy = per_cpu(esgov_policy, dst_cpu);
-	unsigned int max = arch_scale_cpu_capacity(NULL, dst_cpu);
+	unsigned int max = arch_scale_cpu_capacity(dst_cpu);
 	int cpu, prev_cpu = task_cpu(p);
 	int task_util, max_util = 0;
 
