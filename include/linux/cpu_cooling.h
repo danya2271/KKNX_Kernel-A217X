@@ -30,6 +30,12 @@
 
 struct cpufreq_policy;
 
+typedef int (*plat_mitig_t)(int cpu, u32 clip_freq);
+
+struct cpu_cooling_ops {
+	plat_mitig_t ceil_limit, floor_limit;
+};
+
 typedef int (*get_static_t)(cpumask_t *cpumask, int interval,
 			    unsigned long voltage, u32 *power);
 
@@ -70,6 +76,7 @@ struct cpufreq_cooling_device {
 	int *var_table;
 	unsigned int var_volt_size;
 	unsigned int var_temp_size;
+	struct cpu_cooling_ops *plat_ops;
 };
 
 #ifdef CONFIG_CPU_THERMAL
