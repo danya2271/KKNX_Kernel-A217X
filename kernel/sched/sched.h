@@ -905,6 +905,9 @@ struct rq {
 	unsigned long		last_blocked_load_update_tick;
 	unsigned int		has_blocked_load;
 #endif /* CONFIG_SMP */
+#ifdef CONFIG_SMP
+	unsigned int		ttwu_pending;
+#endif
 	unsigned int		nohz_tick_stopped;
 	atomic_t nohz_flags;
 #endif /* CONFIG_NO_HZ_COMMON */
