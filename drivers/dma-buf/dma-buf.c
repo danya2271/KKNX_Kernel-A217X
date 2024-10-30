@@ -332,7 +332,7 @@ static long dma_buf_ioctl(struct file *file,
 	case DMA_BUF_IOCTL_TRACK:
 		return dmabuf_trace_track_buffer(dmabuf);
 	case DMA_BUF_IOCTL_UNTRACK:
-		return dmabuf_trace_untrack_buffer(dmabuf);
+		return 0;
 	default:
 		return -ENOTTY;
 	}
