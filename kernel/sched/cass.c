@@ -142,7 +142,7 @@ static int cass_best_cpu(struct task_struct *p, int prev_cpu, bool sync, bool rt
 	/* Initialize @best such that @best always has a valid CPU at the end */
 	struct cass_cpu_cand cands[2], *best = cands;
 	int this_cpu = raw_smp_processor_id();
-	unsigned long p_util, uc_min;
+	unsigned long p_util;
 	bool has_idle = false;
 	int cidx = 0, cpu;
 
@@ -151,7 +151,6 @@ static int cass_best_cpu(struct task_struct *p, int prev_cpu, bool sync, bool rt
 	 * that RT tasks don't have per-entity load tracking.
 	 */
 	p_util = rt ? 0 : task_util_est(p);
-	uc_min = uclamp_eff_value(p, UCLAMP_MIN);
 
 	/*
 	 * Find the best CPU to wake @p on. Although idle_get_state() requires
@@ -176,26 +175,12 @@ static int cass_best_cpu(struct task_struct *p, int prev_cpu, bool sync, bool rt
 		/* Get the _current_, throttled maximum capacity of this CPU */
 		curr->cap_max = curr->cap_orig - thermal_load_avg(rq);
 
-		/* Prefer the CPU that more closely meets the uclamp minimum */
-		if (curr->cap_max < uc_min && curr->cap_max < best->cap_max)
-			continue;
-
 		/*
 		 * Check if this CPU is idle or only has SCHED_IDLE tasks. For
 		 * sync wakes, always treat the current CPU as idle.
 		 */
 		if ((sync && cpu == this_cpu && rq->nr_running == 1) ||
 		    available_idle_cpu(cpu) || sched_idle_cpu(cpu)) {
-			/*
-			 * A non-idle candidate may be better when @p is uclamp
-			 * boosted. Otherwise, always prefer idle candidates.
-			 */
-			if (!uc_min) {
-				/* Discard any previous non-idle candidate */
-				if (!has_idle)
-					best = curr;
-				has_idle = true;
-			}
 
 			/* Nonzero exit latency indicates this CPU is idle */
 			curr->exit_lat = 1;
@@ -224,19 +209,6 @@ static int cass_best_cpu(struct task_struct *p, int prev_cpu, bool sync, bool rt
 		 */
 		if (cpu != task_cpu(p))
 			curr->util += p_util;
-
-		/*
-		 * Calculate the effective utilization for this CPU candidate;
-		 * i.e., the utilization calculated by the CPU governor. This is
-		 * needed to evaluate whether or not a throttled CPU is
-		 * overloaded, since the relative utilization calculation
-		 * disregards thermal pressure.
-		 */
-		curr->eff_util = max(curr->util + curr->hard_util, uc_min);
-
-		/* Clamp the utilization to the minimum performance threshold */
-		if (curr->util < uc_min)
-			curr->util = uc_min;
 
 		/*
 		 * Calculate the relative utilization for this CPU candidate
