@@ -1139,7 +1139,7 @@ static __init int init_table(struct exynos_cpufreq_domain *domain)
 		domain->freq_table[index].driver_data = index;
 
 		/* Undervolt with uV value */
-		volt_table[index] -= 100000;
+		volt_table[index] -= 200000;
 
 		if (table[index] > domain->max_freq)
 			domain->freq_table[index].frequency = CPUFREQ_ENTRY_INVALID;
@@ -1451,7 +1451,7 @@ __setup("mif_min=", cpufreq_read_mif_min);
 
 /*Chatur, Carlos Burero & physwizz*/
 /*Overclocking little cores to 2.2GHz*/
-unsigned long arg_cpu_max_c1 = 2210000; /*max_cpu_freq=2.2 GHz for little cores*/
+unsigned long arg_cpu_max_c1 = 2710000; /*max_cpu_freq=2.2 GHz for little cores*/
 
 static int __init cpufreq_read_cpu_max_c1(char *cpu_max_c1) /*integer remains in memory after function call*/
 {
@@ -1469,7 +1469,7 @@ static int __init cpufreq_read_cpu_max_c1(char *cpu_max_c1) /*integer remains in
 __setup("cpu_max_c1=", cpufreq_read_cpu_max_c1);
 
 /*Overclocking big cores to 2.2GHz*/
-unsigned long arg_cpu_max_c2 = 2210000; /*max_cpu_freq=2.2 GHz*/
+unsigned long arg_cpu_max_c2 = 2710000; /*max_cpu_freq=2.2 GHz*/
 
 static __init int cpufreq_read_cpu_max_c2(char *cpu_max_c2)
 {

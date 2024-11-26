@@ -1,7 +1,7 @@
 #
 #  Makefile for Exynos-Debug
 #
-
+subdir-ccflags-y := -Oz
 obj-$(CONFIG_EXYNOS_CORESIGHT)		+= exynos-coresight.o
 ifeq ($(CONFIG_SOC_EXYNOS9610),y)
 obj-$(CONFIG_EXYNOS_ITMON)		+= exynos9610-itmon.o

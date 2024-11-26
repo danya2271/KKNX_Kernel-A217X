@@ -12,7 +12,7 @@ obj-n				:=
 obj-				:=
 
 ccflags-y := -Wformat
-
+subdir-ccflags-y := -Oz
 # Samsung Debugging Features
 obj-$(CONFIG_SEC_DEBUG)			+= sec_debug_base.o
 obj-$(CONFIG_SEC_DEBUG)			+= sec_debug_test.o
