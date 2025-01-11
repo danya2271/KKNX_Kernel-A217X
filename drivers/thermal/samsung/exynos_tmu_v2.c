@@ -1744,7 +1744,6 @@ static int exynos_tmu_probe(struct platform_device *pdev)
 
 	mutex_lock(&data->lock);
 	list_add_tail(&data->node, &dtm_dev_list);
-	num_of_devices++;
 	mutex_unlock(&data->lock);
 
 	if (list_is_singular(&dtm_dev_list))
@@ -1788,7 +1787,6 @@ static int exynos_tmu_remove(struct platform_device *pdev)
 	list_for_each_entry(devnode, &dtm_dev_list, node) {
 		if (devnode->id == data->id) {
 			list_del(&devnode->node);
-			num_of_devices--;
 			break;
 		}
 	}

@@ -60,7 +60,7 @@ static int ucc_requested;
 static int ucc_requested_val;
 
 #define DEFAULT_LEVEL 0
-
+#define SUSTAINABLE_FREQ 2710000
 /*********************************************************************
  *                          HELPER FUNCTION                           *
  *********************************************************************/
@@ -773,6 +773,15 @@ static ssize_t ufc_store_cpufreq_min_limit_wo_boost(struct kobject *kobj,
 static ssize_t ufc_store_cpufreq_max_limit(struct kobject *kobj, struct kobj_attribute *attr,
 					const char *buf, size_t count)
 {
+	int input;
+	if (!sscanf(buf, "%8d", &input))
+		return -EINVAL;
+
+	input = SUSTAINABLE_FREQ;
+	/* Save the input for sse change */
+	ufc.last_max_input = input;
+	ufc_update_limit(input, PM_QOS_MAX_LIMIT, ufc.sse_mode);
+
 	return count;
 }
 

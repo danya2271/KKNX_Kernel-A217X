@@ -796,11 +796,6 @@ static struct notifier_block thermal_cpufreq_notifier_block = {
 	.notifier_call = cpufreq_thermal_notifier,
 };
 
-int exynos_tmu_add_notifier(struct notifier_block *n)
-{
-	return blocking_notifier_chain_register(&cpu_notifier, n);
-}
-
 static unsigned int find_next_max(struct cpufreq_frequency_table *table,
 				  unsigned int prev_max)
 {
